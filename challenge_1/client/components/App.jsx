@@ -1,4 +1,3 @@
-
 import React from 'react';
 import SearchBar from './SearchBar.jsx'
 import Results from './Results.jsx'
@@ -35,10 +34,9 @@ class App extends React.Component {
   }
   render() {
     return (
-    <div>
-      <h1> main app </h1>
-        <SearchBar updateSearchBar={this.updateText}
-        />
+    <div className="everything">
+      <h1> Historical Events Finder</h1>
+        <SearchBar updateSearchBar={this.updateText}/>
         <Results data={this.state.searchResults}/>
     </div>
     )

@@ -1,0 +1,23 @@
+.description{
+  display:inline-block;
+  margin-right:10px;
+  font-size: 14px;
+  justify-content: space-between;
+}
+.descHeading{
+  display:inline-block;
+  margin-right:10px;
+  font-weight:bold;
+  font-family: Cursive;
+  justify-content: space-between;
+}
+
+.row{
+  text-align: center;
+  margin-left: 150px;
+  margin-right: 150px;
+  border: 2px solid black;
+}
+.everything{
+  text-align: center;
+}
