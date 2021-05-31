@@ -13,7 +13,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <h1> this is the client side  </h1>
+        <h1 style={{'text-align':'center'}}> price points for bitcoin over the last 30 days </h1>
         <Graph/>
       </div>
     )
