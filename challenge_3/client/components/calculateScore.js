@@ -90,30 +90,19 @@ var recordScore = (state,amount,before,after, numOfPinsBefore) => {
     if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame7', numOfPinsBefore);alert('spare!')}
     else {state.frame7BScore = amount; state.frame7Score += amount; resetPins()}
   } else if (turn === 15){
-    console.log('amount',amount)
-
     if (amount === 10) {state = bowlStrike(state, 'frame8')}
     else {state.frame8AScore = amount;state.frame8Score = amount}
   } else if (turn === 16){
-    console.log('amount',amount)
-
-    // check if spare
     if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame8', numOfPinsBefore);alert('spare!')}
     else {state.frame8BScore = amount; state.frame8Score += amount; resetPins()}
   } else if (turn === 17){
-    console.log('amount',amount)
     if (amount === 10) {state = bowlStrike(state, 'frame9')}
     else {state.frame9AScore = amount;state.frame9Score = amount}
   } else if (turn === 18){
-    console.log('amount',amount)
-
     if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame9', numOfPinsBefore);alert('spare!')}
     else {state.frame9BScore = amount; state.frame9Score += amount; resetPins()}
   } else if (turn === 19){
-
-    if (amount === 10) {
-      state = bowlStrikeFinal(state,'frame10A')
-    }
+    if (amount === 10) {state = bowlStrikeFinal(state,'frame10A')}
     else {state.frame10AScore = amount;state.frame10Score = amount}
   } else if (turn === 20){
     // if last game was not strike
@@ -151,7 +140,6 @@ var recordScore = (state,amount,before,after, numOfPinsBefore) => {
 }
 
 var calculateScore = (state) => {
-  console.log('state -> ', state)
 
   var bowlingTypes = []
 
@@ -174,7 +162,6 @@ var calculateScore = (state) => {
       bowlingTypes[i + 2] = 'turkey'
     }
   }
-  console.log('bowlingTypes -> ', bowlingTypes)
 
   var updatedFrameScores = []
   for ( var i = 0; i < bowlingTypes.length - 2; i++) {
@@ -199,11 +186,9 @@ var calculateScore = (state) => {
       updatedFrameScores.push(currentTurnScore)
     }
   }
-  console.log('updatedFrameScores -> ', updatedFrameScores)
 
   updatedFrameScores.push(state.frame10AScore,state.frame10BScore,state.frame10CScore)
   var total = updatedFrameScores.reduce((acc, cv) => {
-    console.log('cv -> ', cv)
     return acc + cv
   })
   if (bowlingTypes[7] === 'turkey') { state.frame8Score = 30; total += 30}
@@ -212,17 +197,12 @@ var calculateScore = (state) => {
   for ( var i = 1; i < 9; i++) {
     state[`frame${i}Score`] = updatedFrameScores[i - 1]
   }
-  console.log('frame10AScore', frame10AScore)
-  console.log('frame10BScore', frame10AScore)
-  console.log('frame10CScore', frame10AScore)
-
   state.frame10AScore = updatedFrameScores[updatedFrameScores.length -3]
   state.frame10BScore = updatedFrameScores[updatedFrameScores.length -2]
   state.frame10CScore = updatedFrameScores[updatedFrameScores.length -1]
   state.frame10Score = state.frame10AScore + state.frame10BScore + state.frame10CScore
-  console.log('state -> ', state)
   state.frame10Score  = total
-  document.querySelector(`#frame10AScore`).innerHTML = score
+  document.querySelector(`#frame10Score`).innerHTML = total
   endGame(total)
   return state
 }
@@ -243,36 +223,27 @@ var updateScoreBoard = (state) => {
       }
 
       if (finalTurn) {
-        // debugger;
-        console.log('entering frame 10 conditional')
-        console.log('key ->', key)
-       // console.log('value ->', state[key])
-        console.log('subTurn ->', subTurn)
+
 
         if (key === 'frame10AScore') {
           if (state[key] === 10) {
-            console.log('got strike on frame10A')
             document.querySelector(`#${turn}AScore`).innerHTML = 'X'
           } else {
             document.querySelector(`#${key}`).innerHTML = state[key]
           }
         } else if (key === 'frame10BScore') {
-          console.log('entering final turn 10B')
           if (state[turn + 'A'] !== 'strike') {
             var previousFrameScore = state[turn + 'AScore']
             var currentFrameScore = state[turn + 'BScore']
             if ((previousFrameScore + currentFrameScore) >= 10) {
-              console.log('got spare on frame10B')
               document.querySelector(`#${key}`).innerHTML = '/'
             }
           } else if (state[key] === 10) {
-            console.log('entering second strike in frame 10')
             document.querySelector(`#${turn}BScore`).innerHTML = 'X'
           } else {
             document.querySelector(`#${key}`).innerHTML =  state[key]
           }
         } else if (key === 'frame10CScore') {
-          console.log('entering frame10C here ')
           if (state[key] === 10) {
             document.querySelector(`#${turn}CScore`).innerHTML = 'X'
           } else {
