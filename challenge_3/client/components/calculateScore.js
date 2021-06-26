@@ -221,6 +221,8 @@ var calculateScore = (state) => {
   state.frame10CScore = updatedFrameScores[updatedFrameScores.length -1]
   state.frame10Score = state.frame10AScore + state.frame10BScore + state.frame10CScore
   console.log('state -> ', state)
+  state.frame10Score  = total
+  document.querySelector(`#frame10AScore`).innerHTML = score
   endGame(total)
   return state
 }
