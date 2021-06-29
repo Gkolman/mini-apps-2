@@ -27,7 +27,6 @@ var bowlStrikeFinal = (state, turn) => {
 }
 var bowlSpare = (state, frame, amount) => {
   alert('spare!')
-  // state[frame] = 'frame'
   state[frame] = 'spare'
   state[frame + 'BScore'] = amount
   state[frame + 'Score'] = 10
@@ -46,60 +45,60 @@ var recordScore = (state,amount,before,after, numOfPinsBefore) => {
     else {state.frame1AScore = amount;state.frame1Score = amount}
   } else if (turn === 2){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame1', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame1', numOfPinsBefore)}
     else {state.frame1BScore = amount;state.frame1Score += amount; resetPins()}
   } else if (turn === 3){
     if (amount === 10) {state = bowlStrike(state, 'frame2')}
     else {state.frame2AScore = amount;state.frame2Score = amount}
   } else if (turn === 4){
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame2', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame2', numOfPinsBefore)}
     else {state.frame2BScore = amount; state.frame2Score += amount; resetPins()}
   } else if (turn === 5){
     if (amount === 10) {state = bowlStrike(state, 'frame3')}
     else {state.frame3AScore = amount;state.frame3Score = amount}
   } else if (turn === 6){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame3', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame3', numOfPinsBefore)}
     else {state.frame3BScore = amount; state.frame3Score += amount; resetPins()}
   } else if (turn === 7){
     if (amount === 10) {state = bowlStrike(state, 'frame4')}
     else {state.frame4AScore = amount;state.frame4Score = amount}
   } else if (turn === 8){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame4', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame4', numOfPinsBefore)}
     else {state.frame4BScore = amount; state.frame4Score += amount; resetPins()}
   }  else if (turn === 9){
     if (amount === 10) { state = bowlStrike(state, 'frame5')}
     else {state.frame5AScore = amount;state.frame5Score = amount}
   } else if (turn === 10){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame5', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame5', numOfPinsBefore)}
     else {state.frame5BScore = amount; state.frame5Score += amount; resetPins()}
   }  else if (turn === 11){
     if (amount === 10) {state = bowlStrike(state, 'frame6')}
     else {state.frame6AScore = amount;state.frame6Score = amount}
   } else if (turn === 12){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame6', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame6', numOfPinsBefore)}
     else {state.frame6BScore = amount; state.frame6Score += amount; resetPins()}
   } else if (turn === 13){
     if (amount === 10) {state = bowlStrike(state, 'frame7')}
     else {state.frame7AScore = amount;state.frame7Score = amount}
   } else if (turn === 14){
     // check if spare
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame7', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame7', numOfPinsBefore)}
     else {state.frame7BScore = amount; state.frame7Score += amount; resetPins()}
   } else if (turn === 15){
     if (amount === 10) {state = bowlStrike(state, 'frame8')}
     else {state.frame8AScore = amount;state.frame8Score = amount}
   } else if (turn === 16){
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame8', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame8', numOfPinsBefore)}
     else {state.frame8BScore = amount; state.frame8Score += amount; resetPins()}
   } else if (turn === 17){
     if (amount === 10) {state = bowlStrike(state, 'frame9')}
     else {state.frame9AScore = amount;state.frame9Score = amount}
   } else if (turn === 18){
-    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame9', numOfPinsBefore);alert('spare!')}
+    if (amount >= numOfPinsBefore) {state = bowlSpare(state, 'frame9', numOfPinsBefore)}
     else {state.frame9BScore = amount; state.frame9Score += amount; resetPins()}
   } else if (turn === 19){
     if (amount === 10) {state = bowlStrikeFinal(state,'frame10A')}
@@ -191,6 +190,7 @@ var calculateScore = (state) => {
   var total = updatedFrameScores.reduce((acc, cv) => {
     return acc + cv
   })
+  // if (bowlingTypes[6] === 'turkey') { state.frame7Score = 30; total += 30}
   if (bowlingTypes[7] === 'turkey') { state.frame8Score = 30; total += 30}
   if (bowlingTypes[8] === 'turkey') { state.frame9Score = 30; total += 30}
 
@@ -201,7 +201,7 @@ var calculateScore = (state) => {
   state.frame10BScore = updatedFrameScores[updatedFrameScores.length -2]
   state.frame10CScore = updatedFrameScores[updatedFrameScores.length -1]
   state.frame10Score = state.frame10AScore + state.frame10BScore + state.frame10CScore
-  state.frame10Score  = total
+  // state.frame10Score  = total
   document.querySelector(`#frame10Score`).innerHTML = total
   endGame(total)
   return state

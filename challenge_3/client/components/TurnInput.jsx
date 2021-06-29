@@ -37,7 +37,7 @@ const TurnInput = () => {
         <tbody>
         <tr id="row1">
             <td></td>
-            <td id="pin10" onClick={() => {findAndKnock(10)} }>1</td>
+            <td id="pin10" onClick={() => {findAndKnock(10)} }>10</td>
             <td></td>
           </tr>
           <tr id="row3">
