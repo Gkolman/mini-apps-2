@@ -73,104 +73,22 @@ export const slice = createSlice({
       let blowUpArea = (state,row,col) => {
         row = parseInt(row)
         col = parseInt(col)
-
-        console.log('col -> ', col)
-        console.log('row -> ', row)
-        console.log('state -> ', state[0].length)
-        console.log('state -> ', state[0][0].length)
-        console.log(`blowing up coordinate ${row}, ${col}`)
         var t,tr,tl,r,dr,d,dl,l;
         var node = state[0][row][col]
-        if (!node.covered) {
-          return
-        } else {
-          node.covered = false
-        }
+        if (!node.covered) {return} else {node.covered = false}
         console.log('making it this far')
-        if (state[0][row-1]) {
-          t = state[0][row-1][col]
-          tr = state[0][row-1][col+1];
-          tl = state[0][row-1][col-1]
-        }
-        if (state[0][row+1]) {
-          d = state[0][row+1][col]
-          dr = state[0][row+1][col+1];
-          dl = state[0][row+1][col-1]
-        }
+        if (state[0][row-1]) {;t = state[0][row-1][col];tr = state[0][row-1][col+1];;tl = state[0][row-1][col-1]}
+        if (state[0][row+1]) {;d = state[0][row+1][col];dr = state[0][row+1][col+1];;dl = state[0][row+1][col-1]}
         r = state[0][row][col+1]
         l = state[0][row][col-1]
-        console.log('here -> ', state[0][row][col-1])
-
-        console.log('r -> ', r)
-
-        if (r) {
-          console.log('visited ->', visited)
-          console.log('r.type ->', r.type)
-          console.log('r.type type ->', typeof(r.type))
-
-
-          console.log(' here ->',  alreadyVisited(visited,[row,col+1]))
-          if (r.type === 0 && !alreadyVisited(visited,[row,col+1]) ){
-            blowUpArea(state,row,col+1)
-          } else {
-            r.covered = false
-          }
-
-        } if (dr) {
-            if (dr.type === 0 && !alreadyVisited(visited,[row + 1,col+1]) ){
-              blowUpArea(state,row+1,col+1)
-            } else {
-              dr.covered = false
-            }
-          //
-
-        }  if (d) {
-              if (d.type === 0 && !alreadyVisited(visited,[row+1,col]) ){
-                blowUpArea(state,row+1, col)
-              } else {
-                d.covered = false
-              }
-
-          // if (d.covered) { blowUpArea(state,row+1, col)}
-        }  if (dl) {
-              if (dl.type === 0 && !alreadyVisited(visited,[row+1,col-1]) ){
-                blowUpArea(state,row+1,col-1)
-              } else {
-                dl.covered = false
-              }
-          // if (dl.covered) {blowUpArea(state,row+1,col-1)}
-        }  if (l) {
-              if (l.type === 0 && !alreadyVisited(visited,[row,col-1]) ){
-                blowUpArea(state,row,col-1)
-              } else {
-                l.covered = false
-              }
-          // if (l.covered) {blowUpArea(state,row,col-1)}
-        }  if (tl) {
-              if (tl.type === 0 && !alreadyVisited(visited,[row-1,col-1]) ){
-                blowUpArea(state,row-1,col-1)
-              } else {
-                tl.covered = false
-              }
-          // if (tl.covered) {blowUpArea(state,row-1,col-1)}
-        }  if (t) {
-              if (t.type === 0 && !alreadyVisited(visited,[row- 1,col]) ){
-                blowUpArea(state,row-1,col)
-              } else {
-                t.covered = false
-              }
-          // if (t.covered) {blowUpArea(state,row-1,col)}
-        }  if (tr) {
-              if (tr.type === 0 && !alreadyVisited(visited,[row-1,col+1]) ){
-                blowUpArea(state,row-1,col+1)
-              } else {
-                tr.covered = false
-              }
-
-          // if (tr.covered) {blowUpArea(state,row+1,col+1)}
-        }  {
-          // return state[0]
-        }
+        if (r) {if (r.type === 0 && !alreadyVisited(visited,[row,col+1]) ){blowUpArea(state,row,col+1)}else {r.covered = false}}
+        if (dr) {if (dr.type === 0 && !alreadyVisited(visited,[row + 1,col+1]) ){blowUpArea(state,row+1,col+1)}else {dr.covered = false}}
+        if (d) {if (d.type === 0 && !alreadyVisited(visited,[row+1,col]) ){blowUpArea(state,row+1, col)}else {d.covered = false}}
+        if (dl) {if (dl.type === 0 && !alreadyVisited(visited,[row+1,col-1]) ){blowUpArea(state,row+1,col-1)}else {dl.covered = false}}
+        if (l) {if (l.type === 0 && !alreadyVisited(visited,[row,col-1]) ){blowUpArea(state,row,col-1)}else {l.covered = false}}
+        if (tl) {if (tl.type === 0 && !alreadyVisited(visited,[row-1,col-1]) ){blowUpArea(state,row-1,col-1)}else {tl.covered = false}}
+        if (t) {if (t.type === 0 && !alreadyVisited(visited,[row- 1,col]) ){blowUpArea(state,row-1,col)}else {t.covered = false}}
+        if (tr) {if (tr.type === 0 && !alreadyVisited(visited,[row-1,col+1])){blowUpArea(state,row-1,col+1)}else {tr.covered = false}}
         visited.push([row,col])
       }
 
@@ -181,19 +99,26 @@ export const slice = createSlice({
       if (node.covered === false) return;
       // node.covered = false;
       if (node.type === 'mine') {
+        // reveal all mines;
+
+        for (var i = 0; i < state[0].length; i++) {
+          for (var j =0; j < state[0].length; j++) {
+            if (state[0][i][j].type === 'mine') {
+              state[0][i][j].covered = false
+              document.getElementById(`${i}${j}`).style.color = "red";
+            }
+
+          }
+        }
+        alert('game Over')
+        // end the game
+
         // end the game here
       } else if (node.type === 0) {
-        console.log('this is an empty node!!')
-        console.log(`entering -> blowUpArea ${[row, col]}` )
         blowUpArea(state,row,col)
-        // var dispatch = slice.dispatch
-        // dispatch(slice.actions.blowUpAreaArea(state,`${row}${col}`))
-        // return {
-        //   grid: gridReducer
-        // }
-
+      } else {
+        state[0][row][col].covered = false;
       }
-
       // state[0][row][col].covered = false
       // takes a coordinate,
 
