@@ -19,41 +19,209 @@ export const slice = createSlice({
   initialState : [],
   reducers : {
     createGrid: (state, action) => {
-      console.log('state before create grid', state)
       const {payload} = action
-      var id = 0
       console.log('creating grid')
-      for ( var row = 0; row < 10; row++) {
+      var matrix = []
+      for (var row = 0; row < 10; row++) {
+        var newRow = []
         for (var col = 0; col < 10; col++) {
-          var node = {id :`${row}${col}` ,covered: true, type: 'blank', score: 0}
-          state.push(node)
+          var node = {id:`${row}${col}` ,covered: true, type: 'blank', score: 0}
+          newRow.push(node)
           }
+          matrix.push(newRow)
         }
-        console.log('state after create grid', state)
-
+        state.push(matrix)
       },
 
     plantBombs: (state, action) => {
       const {payload} = action
-
       console.log('planting bombs')
       var coordinates = createBombCoordinates()
-
-      console.log('state -> ', state)
-
       for (var coordinate of coordinates) {
-        var element = state.find(cd => cd.id === 12)
-        console.log('element', element)
-        // state.grid[coordinate[0]][coordinate[1]].type = 'mine'
+        state[0][coordinate[0]][coordinate[1]].type = 'mine'
+        var id = `${coordinate[0]}${coordinate[1]}`
+        document.getElementById(id).innerHTML = 'X'
+      }
+    },
+    assignValues: (state) => {
+      for (var row = 0; row < state[0].length; row++) {
+        for (var col = 0; col < state[0].length; col++) {
+          let node=state[0][row][col]
+          if (node.type === 'mine'){continue}
+          let t,tr,tl,r,dr,d,dl,l
+          if (state[0][row-1]) {t = state[0][row-1][col];tr = state[0][row-1][col+1];tl = state[0][row-1][col-1]}
+          if (state[0][row+1]) {d = state[0][row+1][col];dr = state[0][row+1][col+1];dl = state[0][row+1][col-1]}
+          r = state[0][row][col+1];l = state[0][row][col-1]
+          var values = [t,tr,tl,dr,d,dl,r,l]
+          var score = values.reduce((acc,cv) => {if (cv) {if (cv.type === 'mine') {acc+=1}}return acc},0)
+          state[0][row][col].type = score
+          var id = `${row}${col}`
+          document.getElementById(id).innerHTML = score
+        }
+      }
+    },
+
+    unCover:(state, action) => {
+
+      const {payload} = action
+      var visited = []
+
+      var alreadyVisited = (container, element) => {
+        for (var item of container){if (item[0] === element[0] && item[1] === element[1]) return true}return false;
       }
 
-      // return state
-    }
-  }
+      let blowUpArea = (state,row,col) => {
+        row = parseInt(row)
+        col = parseInt(col)
 
+        console.log('col -> ', col)
+        console.log('row -> ', row)
+        console.log('state -> ', state[0].length)
+        console.log('state -> ', state[0][0].length)
+        console.log(`blowing up coordinate ${row}, ${col}`)
+        var t,tr,tl,r,dr,d,dl,l;
+        var node = state[0][row][col]
+        if (!node.covered) {
+          return
+        } else {
+          node.covered = false
+        }
+        console.log('making it this far')
+        if (state[0][row-1]) {
+          t = state[0][row-1][col]
+          tr = state[0][row-1][col+1];
+          tl = state[0][row-1][col-1]
+        }
+        if (state[0][row+1]) {
+          d = state[0][row+1][col]
+          dr = state[0][row+1][col+1];
+          dl = state[0][row+1][col-1]
+        }
+        r = state[0][row][col+1]
+        l = state[0][row][col-1]
+        console.log('here -> ', state[0][row][col-1])
+
+        console.log('r -> ', r)
+
+        if (r) {
+          console.log('visited ->', visited)
+          console.log('r.type ->', r.type)
+          console.log('r.type type ->', typeof(r.type))
+
+
+          console.log(' here ->',  alreadyVisited(visited,[row,col+1]))
+          if (r.type === 0 && !alreadyVisited(visited,[row,col+1]) ){
+            blowUpArea(state,row,col+1)
+          } else {
+            r.covered = false
+          }
+
+        } if (dr) {
+            if (dr.type === 0 && !alreadyVisited(visited,[row + 1,col+1]) ){
+              blowUpArea(state,row+1,col+1)
+            } else {
+              dr.covered = false
+            }
+          //
+
+        }  if (d) {
+              if (d.type === 0 && !alreadyVisited(visited,[row+1,col]) ){
+                blowUpArea(state,row+1, col)
+              } else {
+                d.covered = false
+              }
+
+          // if (d.covered) { blowUpArea(state,row+1, col)}
+        }  if (dl) {
+              if (dl.type === 0 && !alreadyVisited(visited,[row+1,col-1]) ){
+                blowUpArea(state,row+1,col-1)
+              } else {
+                dl.covered = false
+              }
+          // if (dl.covered) {blowUpArea(state,row+1,col-1)}
+        }  if (l) {
+              if (l.type === 0 && !alreadyVisited(visited,[row,col-1]) ){
+                blowUpArea(state,row,col-1)
+              } else {
+                l.covered = false
+              }
+          // if (l.covered) {blowUpArea(state,row,col-1)}
+        }  if (tl) {
+              if (tl.type === 0 && !alreadyVisited(visited,[row-1,col-1]) ){
+                blowUpArea(state,row-1,col-1)
+              } else {
+                tl.covered = false
+              }
+          // if (tl.covered) {blowUpArea(state,row-1,col-1)}
+        }  if (t) {
+              if (t.type === 0 && !alreadyVisited(visited,[row- 1,col]) ){
+                blowUpArea(state,row-1,col)
+              } else {
+                t.covered = false
+              }
+          // if (t.covered) {blowUpArea(state,row-1,col)}
+        }  if (tr) {
+              if (tr.type === 0 && !alreadyVisited(visited,[row-1,col+1]) ){
+                blowUpArea(state,row-1,col+1)
+              } else {
+                tr.covered = false
+              }
+
+          // if (tr.covered) {blowUpArea(state,row+1,col+1)}
+        }  {
+          // return state[0]
+        }
+        visited.push([row,col])
+      }
+
+      // console.log('state -> ', JSON.stringify(state[0]))
+      var row = payload.slice(0,1)
+      var col = payload.slice(1)
+      var node = state[0][row][col]
+      if (node.covered === false) return;
+      // node.covered = false;
+      if (node.type === 'mine') {
+        // end the game here
+      } else if (node.type === 0) {
+        console.log('this is an empty node!!')
+        console.log(`entering -> blowUpArea ${[row, col]}` )
+        blowUpArea(state,row,col)
+        // var dispatch = slice.dispatch
+        // dispatch(slice.actions.blowUpAreaArea(state,`${row}${col}`))
+        // return {
+        //   grid: gridReducer
+        // }
+
+      }
+
+      // state[0][row][col].covered = false
+      // takes a coordinate,
+
+      // checkes the values of the coorinate in the amtrix ;
+      // if the value is a mine, end the game
+      // if the value at the coordinate is a 0;
+      // perform recursive blow up are method;
+      // else uncover target value
+    },
+
+
+  }
 })
 
-export const {createGrid,plantBombs} = slice.actions
+export const selectCount = (state) => state.counter.value;
+
+export const blowUpAreaAreaAtCoordinate = (row) => (dispatch, getState) => {
+  console.log('entering blowUpAreaAreaAtCoordinate')
+  const stateCopy = getState();
+  dispatch(blowUpAreaArea(`${row[0]}${row[1]}`));
+};
+
+export const unCoverAtCoordinate = (row, col) => (dispatch, getState) => {
+  const stateCopy = getState();
+  dispatch(unCover(`${row}${col}`));
+};
+
+export const {createGrid,plantBombs,assignValues,unCover,blowUpAreaArea} = slice.actions
 export default slice.reducer
 
 /*
