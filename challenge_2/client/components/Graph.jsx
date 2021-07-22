@@ -57,15 +57,17 @@ class Graph extends React.Component {
               data: dataValues,
               backgroundColor: dataSetColors,
               borderColor: dataSetBorderColors,
-              borderWidth: 1
+              borderWidth: 0.5
           }]
       },
-      options: {
-          scales: {
-              y: {
-                  beginAtZero: true
-              }
-          }
+      scales: {
+        x: {
+            type: 'linear'
+        },
+        y: {
+            type: 'linear'
+        }
+        }
       }
     });
   }
@@ -84,7 +86,7 @@ class Graph extends React.Component {
   render() {
       return (
       <div>
-        <canvas id="myChart" width="400" height="400">
+        <canvas id="myChart" width="100" height="100">
         </canvas>
       </div>
       )
